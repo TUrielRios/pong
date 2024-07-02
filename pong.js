@@ -1,4 +1,4 @@
-import { drawRect, drawBall, drawBackground, drawImage } from './utils.js';
+import { drawRect, drawBall, drawImage } from './utils.js';
 import { Player, Computer } from './player.js';
 import { Ball } from './ball.js';
 
@@ -8,8 +8,18 @@ const ctx = canvas.getContext('2d');
 const messiImage = new Image();
 messiImage.src = './assets/messi.png';
 
-const player = new Player(20, canvas.height / 2 - 75, 70, 150, 5, messiImage); // Ajustado el ancho de Messi
-const computer = new Computer(canvas.width - 100, canvas.height / 2 - 75, 70, 150, 4); // Ajustado el ancho del Dibu
+const armaniImage = new Image();
+armaniImage.src = './assets/armani.png';
+
+const dibuMartinezImage = new Image();
+dibuMartinezImage.src = './assets/dibu-martinez.png';
+
+let currentGoalie = dibuMartinezImage;
+let currentSubstitute = armaniImage;
+let isArmani = false; // Estado para verificar si el portero es Armani
+
+const player = new Player(20, canvas.height / 2 - 75, 120, 150, 5, messiImage); // Ajustado el ancho de Messi
+const computer = new Computer(canvas.width - 120, canvas.height / 2 - 75, 120, 150, 4, dibuMartinezImage); // Ajustado el ancho del Dibu
 const ball = new Ball(canvas.width / 2, canvas.height / 2, 10, 4, 4);
 
 let playerScore = 0;
@@ -18,23 +28,18 @@ let computerScore = 0;
 const background = new Image();
 background.src = './assets/cancha.png';
 
-const dibuMartinez = new Image();
-dibuMartinez.src = './assets/dibu-martinez.png';
-
-const armani = new Image();
-armani.src = './assets/armani.png';
-
-let currentGoalie = dibuMartinez;
-let currentSubstitute = armani;
-let isArmani = false; // Estado para verificar si el portero es Armani
-
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  drawBackground(ctx, background);
+
+  // Dibujar el fondo del estadio
+  ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+
+  // Dibujar los elementos del juego
   drawImage(ctx, player.image, player.x, player.y, player.width, player.height);
   drawImage(ctx, currentGoalie, computer.x, computer.y, computer.width, computer.height);
   drawBall(ctx, ball.x, ball.y, ball.radius, 'white');
 
+  // Dibujar marcador
   ctx.font = '32px Arial';
   ctx.fillStyle = 'white';
   ctx.fillText(playerScore, canvas.width / 4, 50);
@@ -45,6 +50,8 @@ function update() {
   player.update(canvas);
   computer.update(ball, canvas);
   ball.update(player, computer, canvas, isArmani); // Pasar el estado del portero actual
+
+  // Lógica de puntuación y reseteo de la pelota
   if (ball.x - ball.radius < 0) {
     computerScore++;
     ball.reset(canvas.width / 2, canvas.height / 2);
@@ -62,6 +69,7 @@ function loop() {
   requestAnimationFrame(loop);
 }
 
+// Eventos del teclado
 document.addEventListener('keydown', (e) => {
   if (e.key === 'ArrowUp') {
     player.moveUp();
@@ -74,6 +82,7 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
+// Evento click para cambiar entre Armani y Dibu Martínez
 document.getElementById('suplente').addEventListener('click', () => {
   const tempSrc = currentGoalie.src;
   currentGoalie.src = currentSubstitute.src;
@@ -82,4 +91,5 @@ document.getElementById('suplente').addEventListener('click', () => {
   isArmani = !isArmani; // Cambiar el estado del portero actual
 });
 
+// Iniciar el juego
 loop();

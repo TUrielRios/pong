@@ -1,57 +1,79 @@
 body { 
   text-align: center; 
-  background: linear-gradient(to right, #0f2027, #203a43, #2c5364); 
+  background: #000; /* Fondo oscuro para el área fuera del canvas */
   color: white; 
   font-family: 'Roboto', sans-serif; 
   margin: 0; 
   padding: 0; 
-  display: flex; 
-  justify-content: center; 
-  align-items: center; 
-  height: 100vh; 
 }
 
-.container {
+#background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1; /* Colocar detrás de todo el contenido */
+}
+
+#background-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Ajustar la imagen al tamaño del contenedor */
+}
+
+#container {
+  position: relative;
+  z-index: 1; /* Colocar sobre el fondo */
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
   text-align: center;
-  background: rgba(0, 0, 0, 0.7);
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
 }
 
 h1 { 
-  font-size: 3rem; 
-  margin-bottom: 20px; 
-  color: #f5a623; 
+  font-size: 2rem; 
+  color: #5e3d08; 
   text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
 }
 
 canvas { 
-  background: #444; 
+  background: #444; /* Color de fondo del juego dentro del canvas */
   display: block; 
   margin: 0 auto; 
-  border: 5px solid #f5a623; 
   border-radius: 10px; 
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
 }
 
 #suplentes {
-  margin-top: 20px;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  padding: 20px;
+  margin-top: 20px;
 }
 
-#suplentes img {
+#suplentes h2 {
+  font-size: 1.5rem; 
+  margin-bottom: 10px; 
+  padding: 20px;
+  color: white;
+  background-color: #f5a623;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+#suplente {
   cursor: pointer;
-  width: 70px; 
+  width: 120px; 
   height: 150px; 
+  background-color: #f5a623;
   border: 3px solid #f5a623; 
-  border-radius: 10px;
+  border-radius: 50%;
   transition: transform 0.3s, box-shadow 0.3s;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
-#suplentes img:hover {
+#suplente:hover {
   transform: scale(1.1);
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
 }
