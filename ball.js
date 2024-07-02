@@ -1,4 +1,3 @@
-// ball.js
 export class Ball {
   constructor(x, y, radius, dx, dy) {
     this.x = x;
@@ -10,7 +9,7 @@ export class Ball {
     this.trappedByPlayer = false; // Estado para indicar si la pelota está atrapada
   }
 
-  update(player, computer, canvas) {
+  update(player, computer, canvas, isArmani) {
     if (!this.trappedByPlayer) {
       this.x += this.dx;
       this.y += this.dy;
@@ -23,14 +22,22 @@ export class Ball {
     if (!this.trappedByPlayer) {
       if (this.x - this.radius < player.x + player.width &&
           this.y > player.y && this.y < player.y + player.height) {
-        this.dx *= -1;
+        this.dx *= -1.1; // Incrementar velocidad en cada rebote con el jugador
         this.lastHitByPlayer = true;
       }
 
-      if (this.x + this.radius > computer.x &&
-          this.y > computer.y && this.y < computer.y + computer.height) {
-        this.dx *= -1;
-        this.lastHitByPlayer = false;
+      if (this.x + this.radius > computer.x) {
+        if (isArmani) {
+          if (this.y > computer.y && this.y > computer.y + computer.height) {
+            this.dx *= -1.1; // Incrementar velocidad en cada rebote con Armani
+            this.lastHitByPlayer = false;
+          }
+        } else {
+          if (this.y > computer.y && this.y < computer.y + computer.height) {
+            this.dx *= -1.1; // Incrementar velocidad en cada rebote con el Dibu
+            this.lastHitByPlayer = false;
+          }
+        }
       }
     }
   }
@@ -38,8 +45,8 @@ export class Ball {
   reset(x, y) {
     this.x = x;
     this.y = y;
-    this.dx *= -1;
-    this.dy = Math.random() > 0.5 ? 4 : -4;
+    this.dx = Math.random() > 0.5 ? 4 : -4; // Velocidad inicial más alta en x
+    this.dy = Math.random() > 0.5 ? 4 : -4; // Velocidad inicial más alta en y
     this.lastHitByPlayer = false;
     this.trappedByPlayer = false; // Reiniciar el estado de atrapada
   }
@@ -47,10 +54,9 @@ export class Ball {
   shootStraight() {
     if (this.trappedByPlayer) {
       this.trappedByPlayer = false; // Liberar la pelota
-      // Disparar recto hacia el Dibu Martinez
-      if (this.lastHitByPlayer) {
-        this.dy = this.y < computer.y ? 4 : -4;
-      }
+      // Disparar recto sin depender del Dibu Martinez
+      this.dx = this.lastHitByPlayer ? 6 : -6; // Aumentar velocidad inicial en el disparo
+      this.dy = 0; // Disparar en línea recta
     }
   }
 

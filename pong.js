@@ -1,4 +1,3 @@
-// pong.js
 import { drawRect, drawBall, drawBackground, drawImage } from './utils.js';
 import { Player, Computer } from './player.js';
 import { Ball } from './ball.js';
@@ -6,12 +5,11 @@ import { Ball } from './ball.js';
 const canvas = document.getElementById('pongCanvas');
 const ctx = canvas.getContext('2d');
 
-// Cargar imagen de Messi
 const messiImage = new Image();
 messiImage.src = './assets/messi.png';
 
-const player = new Player(20, canvas.height / 2 - 75, 100, 150, 5, messiImage); // Ancho ajustado a 70
-const computer = new Computer(canvas.width - 90, canvas.height / 2 - 75, 100, 120, 4);
+const player = new Player(20, canvas.height / 2 - 75, 70, 150, 5, messiImage); // Ajustado el ancho de Messi
+const computer = new Computer(canvas.width - 100, canvas.height / 2 - 75, 70, 150, 4); // Ajustado el ancho del Dibu
 const ball = new Ball(canvas.width / 2, canvas.height / 2, 10, 4, 4);
 
 let playerScore = 0;
@@ -23,11 +21,18 @@ background.src = './assets/cancha.png';
 const dibuMartinez = new Image();
 dibuMartinez.src = './assets/dibu-martinez.png';
 
+const armani = new Image();
+armani.src = './assets/armani.png';
+
+let currentGoalie = dibuMartinez;
+let currentSubstitute = armani;
+let isArmani = false; // Estado para verificar si el portero es Armani
+
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   drawBackground(ctx, background);
   drawImage(ctx, player.image, player.x, player.y, player.width, player.height);
-  drawImage(ctx, dibuMartinez, computer.x, computer.y, computer.width, computer.height);
+  drawImage(ctx, currentGoalie, computer.x, computer.y, computer.width, computer.height);
   drawBall(ctx, ball.x, ball.y, ball.radius, 'white');
 
   ctx.font = '32px Arial';
@@ -39,8 +44,7 @@ function draw() {
 function update() {
   player.update(canvas);
   computer.update(ball, canvas);
-  ball.update(player, computer, canvas);
-
+  ball.update(player, computer, canvas, isArmani); // Pasar el estado del portero actual
   if (ball.x - ball.radius < 0) {
     computerScore++;
     ball.reset(canvas.width / 2, canvas.height / 2);
@@ -68,6 +72,14 @@ document.addEventListener('keydown', (e) => {
   } else if (e.key === ' ') {
     ball.shootStraight(); // Disparar recto con la barra espaciadora
   }
+});
+
+document.getElementById('suplente').addEventListener('click', () => {
+  const tempSrc = currentGoalie.src;
+  currentGoalie.src = currentSubstitute.src;
+  currentSubstitute.src = tempSrc;
+  document.getElementById('suplente').src = currentSubstitute.src; // Actualizar imagen en el banco de suplentes
+  isArmani = !isArmani; // Cambiar el estado del portero actual
 });
 
 loop();

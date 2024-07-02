@@ -1,4 +1,3 @@
-// player.js
 export class Player {
   constructor(x, y, width, height, speed, image) {
     this.x = x;
