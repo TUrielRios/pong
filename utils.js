@@ -11,3 +11,11 @@ export function drawRect(ctx, x, y, width, height, color) {
     ctx.fill();
   }
   
+  export function drawBackground(ctx, image) {
+    ctx.drawImage(image, 0, 0, ctx.canvas.width, ctx.canvas.height);
+  }
+  
+  export function drawImage(ctx, image, x, y, width, height) {
+    ctx.drawImage(image, x, y, width, height);
+  }
+  
